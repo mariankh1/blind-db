@@ -46,7 +46,7 @@ This project is developed as an open-source **Digital Common**. Our goal is to p
 Add the following to your `Cargo.toml`:
 ```toml
 [dependencies]
-blind-db = { git = "[https://github.com/YOUR_USERNAME/blind-db](https://github.com/YOUR_USERNAME/blind-db)" }
+blind-db = { git = "[https://github.com/mariankh1/blind-db](https://github.com/mariankh1/blind-db)" }
 hex = "0.4"
 ```
 
