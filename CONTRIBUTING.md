@@ -3,7 +3,7 @@
 First off, thank you for considering contributing to BlindDB! We are building this as a Digital Common for the NGI ecosystem.
 
 ## How to Help
-- **Feedback:** Join our discussion on the Delta Chat forum [Link to your post].
+- **Feedback:** Join our discussion on the Delta Chat forum [LINK](https://support.delta.chat/t/researching-a-zero-trust-storage-layer-for-deltachat-core-rust-thoughts/4554)].
 - **Code:** We are currently looking for help with hardware-backed key derivation (TEE) integration.
 - **Security:** If you find a vulnerability, please open an issue or contact the maintainer.
 
