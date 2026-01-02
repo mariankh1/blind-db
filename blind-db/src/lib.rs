@@ -1,36 +1,19 @@
-use hmac::{Hmac, Mac};
-use sha2::Sha256;
+/*
+ * DESCRIPTION: BlindDB Library Root
+ * This is the entry point for the BlindDB crate. It links the crypto and 
+ * indexing modules and exposes the public API for the VFS layer.
+ *
+ * HOW TO RUN: `cargo build`
+ * * HOW TO TEST:
+ * Run all project tests: `cargo test`
+ */
 
-// This is our "Blind Indexer"
-pub struct BlindIndexer {
-    pepper: Vec<u8>, // The "secret salt"
-}
+// 1. Module Declarations 
+pub mod crypto;
+pub mod indexer;
+pub mod indexer;
 
-impl BlindIndexer {
-    pub fn new(pepper: Vec<u8>) -> Self {
-        Self { pepper }
-    }
-
-    /// This turns a name like "Alice" into a random-looking token
-    pub fn tokenize(&self, input: &str) -> String {
-        let mut mac = Hmac::<Sha256>::new_from_slice(&self.pepper)
-            .expect("HMAC keys can be any size");
-        mac.update(input.as_bytes());
-        hex::encode(mac.finalize().into_bytes())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_it_works() {
-        let indexer = BlindIndexer::new(vec![1, 2, 3]);
-        let token = indexer.tokenize("Alice");
-        
-        // This confirms "Alice" is now hidden!
-        println!("The token for Alice is: {}", token);
-        assert_ne!("Alice", token); 
-    }
-}
+// 2. Public Exports
+pub use crypto::RowEncryptor;
+pub use indexer::BlindIndexer;
+pub use vfs::BlindVfs;
