@@ -11,7 +11,7 @@
 // 1. Module Declarations 
 pub mod crypto;
 pub mod indexer;
-pub mod indexer;
+pub mod vfs;
 
 // 2. Public Exports
 pub use crypto::RowEncryptor;
