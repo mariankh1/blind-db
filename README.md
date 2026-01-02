@@ -46,7 +46,7 @@ This project is developed as an open-source **Digital Common**. Our goal is to p
 Add the following to your `Cargo.toml`:
 ```toml
 [dependencies]
-blind-db = { git = "[https://github.com/YOUR_USERNAME/blind-db](https://github.com/YOUR_USERNAME/blind-db)" }
+blind-db = { git = "[https://github.com/mariankh1/blind-db](https://github.com/mariankh1/blind-db)" }
 hex = "0.4"
 ```
 
@@ -66,12 +66,17 @@ fn main() {
     println!("Search Token: {}", blind_token);
 }
 ```
+## 🗺️ Project Roadmap
 
-## 📜 Roadmap
-- [x] Core HMAC-based Blind Indexing (Rust)
-- [ ] SQLite integration wrapper
-- [ ] Hardware key derivation (TEE) bridge for iOS/Android
-- [ ] Support for N-gram substring searching
+### Milestone 1: Core Foundation
+- [x] T1.1: AES-GCM-SIV Encryption Core
+- [x] T1.2: Blind Indexer (SSE)
+- [x] T1.3: VFS Interception Layer
+
+### Milestone 2: Hardware Security
+- [ ] T2.1: Android StrongBox Integration
+- [ ] T2.2: iOS Secure Enclave Wrapper
+- [ ] T2.3: Master Key Derivation Function (PBKDF2/Argon2)
 
 ## ⚖️ License
 Licensed under the Apache License, Version 2.0.
