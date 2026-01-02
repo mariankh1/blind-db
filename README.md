@@ -66,12 +66,17 @@ fn main() {
     println!("Search Token: {}", blind_token);
 }
 ```
+## 🗺️ Project Roadmap
 
-## 📜 Roadmap
-- [x] Core HMAC-based Blind Indexing (Rust)
-- [ ] SQLite integration wrapper
-- [ ] Hardware key derivation (TEE) bridge for iOS/Android
-- [ ] Support for N-gram substring searching
+### Milestone 1: Core Foundation (Current)
+- [x] T1.1: AES-GCM-SIV Encryption Core
+- [x] T1.2: Blind Indexer (SSE)
+- [x] T1.3: VFS Interception Layer
+
+### Milestone 2: Hardware Security
+- [ ] T2.1: Android StrongBox Integration
+- [ ] T2.2: iOS Secure Enclave Wrapper
+- [ ] T2.3: Master Key Derivation Function (PBKDF2/Argon2)
 
 ## ⚖️ License
 Licensed under the Apache License, Version 2.0.
