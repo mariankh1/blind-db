@@ -68,7 +68,7 @@ fn main() {
 ```
 ## 🗺️ Project Roadmap
 
-### Milestone 1: Core Foundation (Current)
+### Milestone 1: Core Foundation
 - [x] T1.1: AES-GCM-SIV Encryption Core
 - [x] T1.2: Blind Indexer (SSE)
 - [x] T1.3: VFS Interception Layer
