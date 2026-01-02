@@ -1,52 +1,62 @@
-# BlindDB
+# BlindDB 🛡️
 
-**A Forensic-Resilient Storage SDK for Secure Applications.**
+**Forensic Resilience & Plausible Deniability for Secure Applications.**
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Rust](https://img.shields.io/badge/Language-Rust-orange.svg)](https://www.rust-lang.org/)
+[![Status](https://img.shields.io/badge/Status-Active_Research-green.svg)]()
 
-## Executive Summary
-BlindDB is an open-source side project exploring the **"Local Decryption Paradox"**: the vulnerability where local message history is exposed to forensic tools (e.g., Cellebrite, GrayKey) whenever a secure application is active.
+## 🕰️ Breaking a 5-Year Deadlock
+Discussions regarding app-level encryption and "forced disclosure" protection have been active in the privacy community (notably the Delta Chat forums) since **August 2021**. Implementation has often remained "stuck" due to the architectural complexity of managing decoy states without leaking metadata or compromising performance.
 
-By implementing **Searchable Symmetric Encryption (SSE)** and hardware-gated key derivation, BlindDB allows applications to search and retrieve data without ever "unlocking" the entire database in memory.
+**BlindDB** is a Rust-based cryptographic library designed to break this deadlock. It provides a standalone, pluggable storage layer that allows messaging apps to implement forensic resilience and plausible deniability without rebuilding their entire core.
 
+---
 
-## 🚀 Key Innovations
+## 🚀 Key Pillars
 
-### 1. Blind Indexing (SSE)
-Unlike traditional full-disk encryption, BlindDB utilizes cryptographic "blind tokens" for searchable fields. 
-- **Privacy:** The database engine retrieves records by matching hashes; it never sees the plaintext names or metadata.
-- **Opacity:** An attacker with a database dump sees only useless, high-entropy random tokens.
-
-### 2. Hardware-Backed Security
-BlindDB is designed to integrate with a device's **Trusted Execution Environment (TEE)**:
-- **iOS:** Secure Enclave
-- **Android:** StrongBox / Keymaster
-The secret "pepper" used for indexing remains isolated within the hardware security module.
-
-### 3. Lease-Token Performance
-To ensure a snappy user experience, we utilize a **Lease Token** model. The hardware releases short-lived keys to a protected memory region, allowing thousands of HMAC operations per second while ensuring the data is "re-blinded" the moment the app is backgrounded.
+### 1. Blind Indexing (Forensic Resilience)
+Traditional "at-rest" encryption often fails when an app is "hot" (active in memory). BlindDB implements **Searchable Symmetric Encryption (SSE)**.
+- **The Tech:** Data is indexed using cryptographic "blind tokens" (HMAC-based).
+- **The Result:** Even if a device is seized while the app is active, a memory dump reveals only opaque tokens, not your plaintext message history.
 
 
+
+### 2. Multi-State Indexing (Plausible Deniability)
+To resist social coercion (being forced to unlock a device), BlindDB supports a **Dual-PIN Architecture**. 
+- **Decoy State:** Entering a "Safety PIN" derives keys for a separate index containing harmless, plausible data.
+- **True State:** Entering the "True PIN" unlocks the hardware-gated keys for the actual sensitive history.
+The database structure is designed so that the existence of a "hidden" state is cryptographically unprovable.
+
+
+
+### 3. Existence Hiding (Probabilistic Privacy)
+Hiding message content is insufficient if metadata (like contact lists) is leaked. BlindDB utilizes **Bloom Filters**.
+- **The Tech:** A probabilistic data structure used to verify membership without storing the actual keys.
+- **The Result:** If an adversary searches for a hidden contact, the system returns "Not Found." Because Bloom Filters allow for rare false positives, any unexpected match can be plausibly denied as a mathematical artifact.
+
+
+
+---
 
 ## 🏗️ Ecosystem Impact
-This project is developed as an open-source **Digital Common**. Our goal is to provide a pluggable storage trait for:
-- **Delta Chat:** Hardening the `deltachat-core-rust` storage layer.
-- **Matrix:** Enhancing the Matrix Rust SDK with forensic-resilient storage.
+This project is an open-source **Digital Common**. We are currently researching integration paths for:
+- **Delta Chat:** Hardening the `deltachat-core-rust` storage layer against forensic extraction.
+- **Matrix:** Providing a Zero-Trust storage option for the Matrix Rust SDK.
 
-## 🤝 Call for Collaboration
-**This is a side project and we are looking for contributors!** We are specifically looking for help from researchers and developers in the following areas:
-- **TEE Integration:** Developers with experience in `Apple Secure Enclave` or `Android StrongBox`.
-- **Database Engineering:** Experience with SQLite custom functions or VFS layers.
-- **Audit:** Cryptographers to review our SSE implementation and lease-token model.
+## 🤝 Collaboration: Join the Side Project!
+We are looking for researchers and developers to help with:
+- **TEE Integration:** Implementing hardware-backed key derivation (Secure Enclave / StrongBox).
+- **Database Engineering:** Wrapping this logic into a custom SQLite VFS (Virtual File System).
+- **Audit:** Cryptographic review of our "Deniable SSE" and lease-token models.
 
 ## 🛠️ Technical Setup
 
 ### Installation
-Add the following to your `Cargo.toml`:
+Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-blind-db = { git = "[https://github.com/YOUR_USERNAME/blind-db](https://github.com/YOUR_USERNAME/blind-db)" }
+blind-db = { git = "[https://github.com/mariankh1/blind-db](https://github.com/mariankh1/blind-db)" }
 hex = "0.4"
 ```
 
@@ -55,23 +65,23 @@ hex = "0.4"
 use blind_db::BlindIndexer;
 
 fn main() {
-    // 1. Initialize with a hardware-derived secret
+    // 1. Initialize with a hardware-derived secret (pepper)
     let secret_pepper = vec![0u8; 32]; 
     let indexer = BlindIndexer::new(secret_pepper);
 
-    // 2. Tokenize a sensitive field (e.g., a contact name)
+    // 2. Tokenize a sensitive field for an opaque search index
     let contact_name = "Alice";
     let blind_token = indexer.tokenize(contact_name);
 
-    println!("Search Token: {}", blind_token);
+    println!("Searchable Opaque Token: {}", blind_token);
 }
 ```
 
 ## 📜 Roadmap
 - [x] Core HMAC-based Blind Indexing (Rust)
-- [ ] SQLite integration wrapper
+- [ ] Multi-State "Decoy" logic
+- [ ] Bloom-filter based metadata skipping
 - [ ] Hardware key derivation (TEE) bridge for iOS/Android
-- [ ] Support for N-gram substring searching
 
 ## ⚖️ License
 Licensed under the Apache License, Version 2.0.
